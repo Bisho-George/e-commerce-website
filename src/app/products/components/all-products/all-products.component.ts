@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { ProductsService } from '../../services/products.service';
 
 @Component({
@@ -11,17 +11,21 @@ export class AllProductsComponent {
   products: any[] = [];
   categories: any[] = [];
   selectedOption: any = 'All';
+  isLoading = false;
   ngOnInit() {
     this.getProducts();
     this.getAllCategories();
   }
   getProducts() {
+    this.isLoading = true;
     this.productsService.getAllProducts().subscribe(
       (res: any) => {
         this.products = res;
+        this.isLoading = false;
       },
       (err) => {
         alert('Error' + err.message);
+        this.isLoading = false;
       }
     );
   }
@@ -40,14 +44,17 @@ export class AllProductsComponent {
       this.getProducts();
       return;
     }
+    this.isLoading = true;
     this.productsService.getProductByCategory(this.selectedOption).subscribe(
       (res: any) => {
         if (res) {
           this.products = res;
+          this.isLoading = false;
         }
       },
       (err) => {
         alert('Error' + err.message);
+        this.isLoading = false;
       }
     );
   }
